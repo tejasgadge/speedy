@@ -4,7 +4,7 @@ const NUMB_OF_WORDS = 50
 const SECONDS = 60
 function App() {
 
-  let interval;
+  // let interval;
   const [countDown, setCountDown] = useState(SECONDS);
   const [words, setWords] = useState([]);
   const [currInput, setCurrInput] = useState();
@@ -64,20 +64,14 @@ function App() {
 
     if (status !== 'started') {
       setStatus('started')
-      interval = setInterval(() => {
+      let interval = setInterval(() => {
         setCountDown((prevCountdown) => {
-          if (prevCountdown === 0) {
+          if (prevCountdown <= 0) {
             clearInterval(interval)
-            setStatus('finished')
+            prevCountdown<0?setStatus('waiting'):setStatus('finished')
             setCurrInput("")
             return SECONDS
           } 
-          // else if(status==='waiting'){
-          //   clearInterval(interval);
-          //   setStatus('waiting');
-          //   setCurrInput('');
-          //   return SECONDS;
-          // } 
           else {
             return prevCountdown - 1
           }
@@ -88,11 +82,14 @@ function App() {
 
   function reset()
   {
-    console.log(interval)
-    clearInterval(interval)
     setStatus('waiting')
-    setCountDown(SECONDS)
+    setCountDown(-1)
     setCurrInput("")
+    setWords(generateWords())
+    setCurrWordIndex(0)
+    setCorrect(0)
+    setIncorrect(0)
+    setCurrCharIndex(-1)
   }
 
   function checkMatch() {
@@ -121,6 +118,7 @@ function App() {
 
   return (
     <div className="h-full w-full bg-sky-200 ">
+      {console.log("hello")}
       <div className="p-20 flex justify-around items-center flex-col">
         <div><span className="text-white  bg-blue-950 rounded-md p-1 text-3xl font-bold w-full float-left">{countDown}</span></div>
         <div className="w-full bg-slate-700 rounded-md m-4 p-2">
